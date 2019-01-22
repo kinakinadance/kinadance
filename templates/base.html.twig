@@ -12,17 +12,17 @@
         <script src=»http://code.jquery.com/jquery-latest.js»></script>
         <style>
         body footer,.hauptnav{background-color: #212529;color:#fff;}
-            .hauptnav{width: 100%}
+            .hauptnav{width: 100%;font-weight:600}
             .hauptnav a{color:#fff;padding-right: 3rem}
         </style>
     </head>
 
     <body>
 
+    <header>
 
-
-            <nav class="navbar navbar-inverse">
-                <div class="container-fluid">
+            <nav>
+                <div class="navbar navbar-expand-lg hauptnav">
 
                     <ul class="nav hauptnav">
                         <li class="active"><a href="#">Home</a></li>
@@ -32,14 +32,14 @@
                     </ul>
                 </div>
             </nav>
-
+</header>
 
 
         {% block body %}{% endblock %}
 
 
 
-            <footer>
+            <footer class="fixed-bottom">
                 <div class="container">
                     <div class="row">
                         <div id="footer-copyright" class="col-md-6">

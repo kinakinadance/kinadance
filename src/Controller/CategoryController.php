@@ -3,15 +3,31 @@
 namespace App\Controller;
 
 use App\Entity\TblCategory;
+use App\Form\CategoryType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use App\Events;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Forms;
+use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\GenericEvent;
+use Symfony\Component\HttpFoundation\Response;
 
+
+/**
+ *
+ * @Route("/category")
+ *
+ * @author Sergej Böhm
+ */
 class CategoryController extends AbstractController
 {
 
 
     /**
-     * @Route("/category", name="category")
+     *  * @Route("/", methods={"GET"}, name="category_show")
      */
     public function index()
     {
@@ -19,20 +35,56 @@ class CategoryController extends AbstractController
             ->getRepository(TblCategory::class)
         ->findAll();
 
-        if (!$category) {
-            throw $this->createNotFoundException(
-                'Tabelle Category ist leer.'
-            );
-        }
-        return $this->render('category/index.html.twig', [
-            'category' => $category
-        ]);
-        //return new Response('Check out this great product: '.$product->getName());
+        /*$form = $this->createForm(CategoryType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $datensatz = $form->getData();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($datensatz);
+            $em->flush();
 
-        // or render a template
-        // in the template, print things with {{ product.name }}
-        // return $this->render('product/show.html.twig', ['product' => $product]);
+            $event = new GenericEvent($datensatz);
+
+
+            $eventDispatcher->dispatch(Events::COMMENT_CREATED, $event);
+            $category = $this->getDoctrine()
+                ->getRepository(TblCategory::class)
+                ->findAll();
+            $form = $this->createForm(CategoryType::class);
+        }*/
+
+        return $this->render('category/index.html.twig', [
+            'category' => $category,
+            //'form'=>$form->createView()
+        ]);
+
+
+
     }
+
+    /**
+     * @Route("/new", methods={"POST","GET"}, name="category_new")
+     */
+    public function newCategory(Request $request, EventDispatcherInterface $eventDispatcher){
+
+        $form = $this->createForm(CategoryType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $datensatz = $form->getData();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($datensatz);
+            $em->flush();
+            $event = new GenericEvent($datensatz);
+            $eventDispatcher->dispatch(Events::COMMENT_CREATED, $event);
+            return $this->redirectToRoute('category_show');
+        }
+
+        return $this->render('category/new.html.twig', [
+            'form'=>$form->createView()
+        ]);
+    }
+
+
 
 
 
