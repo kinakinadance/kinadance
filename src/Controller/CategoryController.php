@@ -71,7 +71,9 @@ class CategoryController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $datensatz = $form->getData();
+            //dump($datensatz);die;
             $em = $this->getDoctrine()->getManager();
+
             $em->persist($datensatz);
             $em->flush();
             $event = new GenericEvent($datensatz);
@@ -84,8 +86,36 @@ class CategoryController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/{id}", methods={"GET"}, name="category_delete")
+     */
 
+    public function deleteCategory($id){
 
+        $em = $this->getDoctrine()->getManager();
+        $datasatz = $em->getRepository(TblCategory::class)->find($id);
+        $em->remove($datasatz);
+        $em->flush();
+        return $this->redirectToRoute('category_show');
+    }
 
+    /**
+     * @Route("/{id}/update", methods={"GET","POST"}, name="category_update")
+     */
 
+    public function updateCategory(Request $request,$id){
+        $em = $this->getDoctrine()->getManager();
+        $datasatz = $em->getRepository(TblCategory::class)->find($id);
+        $form = $this->createForm(CategoryType::class,$datasatz);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $newData=$form->getData();
+            //dump($newData);die;
+            $datasatz->setCategory_name($newData->getCategory_name());
+            $em->flush();
+        }
+        return $this->render('category/update.html.twig', [
+            'form'=>$form->createView()
+        ]);
+    }
 }
