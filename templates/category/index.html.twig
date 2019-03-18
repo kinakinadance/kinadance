@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Kategorie{% endblock %}
+
+{% block body %}
+<style>
+
+</style>
+    <h1 class="text-center">Kategorieverwaltung</h1>
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-lg-6">
+    <table class="table table-bordered table-striped">
+        <thead class="thead-dark">
+<tr>
+        <th>id</th>
+        <th>Kategorie</th>
+        <th></th>
+        <th></th>
+</tr>
+        </thead>
+        {% for cat in category %}
+
+            <tbody class="">
+            <tr>
+                <td>{{cat.id}}</td>
+                <td>{{cat.categoryname}}</td>
+                <td><a href="{{ path('category_update',{id:cat.id}) }}"><i class="far fa-edit fa-lg"></i></a></td>
+                <td><a href="{{ path('category_delete',{id:cat.id}) }}"><i class="far fa-trash-alt fa-lg"></i></a></td>
+            </tr>
+            </tbody>
+        {% endfor %}
+    </table>
+        </div>
+        <div class="col-lg-6">
+
+            <div class="section actions">
+                <a href="{{ path('category_new') }}" class="btn btn-lg btn-block btn-success">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Neue Kategorie erstellen
+                </a>
+            </div>
+
+        </div>
+        </div>
+
+</div>
+
+
+
+{% endblock %}
